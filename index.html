@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>欣欣日常</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #5B8DEF;
+            --primary-light: #E8F0FE;
+            --primary-dark: #3A6BCF;
+            --bg: #F2F6FC;
+            --card: #FFFFFF;
+            --text: #1A2B4A;
+            --text-light: #6B7F9E;
+            --border: #E6EDF6;
+            --shadow: 0 6px 24px rgba(91, 141, 239, 0.12);
+            --radius: 20px;
+            --radius-sm: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            padding: 0 0 76px 0;
+            max-width: 430px;
+            margin: 0 auto;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ===== 顶部导航 ===== */
+        .app-header {
+            background: var(--card);
+            padding: 14px 20px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.92);
+        }
+        .app-header .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .app-header .brand .icon {
+            font-size: 26px;
+        }
+        .app-header .brand h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            letter-spacing: 0.5px;
+        }
+        .app-header .brand h1 span {
+            font-weight: 300;
+            color: var(--text-light);
+            font-size: 12px;
+            margin-left: 4px;
+        }
+        .app-header .streak {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ===== 四环 ===== */
+        .rings-section {
+            background: var(--card);
+            margin: 16px 16px 18px;
+            padding: 18px 10px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .ring-item {
+            text-align: center;
+        }
+        .ring-item .circle {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            margin: 0 auto 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .ring-item .circle .inner {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .ring-item .label {
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        .c1 { background: conic-gradient(#5B8DEF 0% 0%, #E6EDF6 0% 100%); }
+        .c2 { background: conic-gradient(#6B9CF5 0% 0%, #E6EDF6 0% 100%); }
+        .c3 { background: conic-gradient(#8AB0F7 0% 0%, #E6EDF6 0% 100%); }
+        .c4 { background: conic-gradient(#4A7ED9 0% 0%, #E6EDF6 0% 100%); }
+
+        /* ===== Tab栏 ===== */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            background: var(--card);
+            margin: 0 16px 16px;
+            padding: 5px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        .tab-bar button {
+            flex: 1;
+            min-width: 48px;
+            border: none;
+            background: transparent;
+            padding: 9px 4px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.25s;
+            white-space: nowrap;
+        }
+        .tab-bar button.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(91, 141, 239, 0.35);
+        }
+        .tab-bar button:active { transform: scale(0.94); }
+
+        /* ===== 卡片容器 ===== */
+        .page {
+            display: none;
+            padding: 0 16px;
+        }
+        .page.active { display: block; }
+
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 18px 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bg);
+        }
+        .card-title .sub {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-left: auto;
+        }
+
+        /* ===== 表单 ===== */
+        .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .row label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            min-width: 48px;
+        }
+        .row input, .row select, .row textarea {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            outline: none;
+            background: var(--bg);
+            color: var(--text);
+            transition: 0.2s;
+            min-width: 60px;
+        }
+        .row input:focus, .row select:focus, .row textarea:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(91,141,239,0.12);
+        }
+        .row textarea { min-height: 60px; resize: vertical; }
+
+        /* ===== 按钮 ===== */
+        .btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 4px 14px rgba(91, 141, 239, 0.30);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            box-shadow: none;
+        }
+        .btn-small { padding: 6px 14px; font-size: 12px; border-radius: 8px; }
+        .btn-success { background: #3FBA8C; box-shadow: 0 4px 14px rgba(63, 186, 140, 0.30); }
+        .btn-orange { background: #E8924A; box-shadow: 0 4px 14px rgba(232, 146, 74, 0.30); }
+        .btn-block { width: 100%; justify-content: center; }
+
+        /* ===== 列表 ===== */
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--bg);
+        }
+        .list-item:last-child { border-bottom: none; }
+        .list-item .name { font-size: 14px; color: var(--text); }
+        .list-item .tag {
+            font-size: 12px;
+            padding: 2px 14px;
+            border-radius: 20px;
+            background: var(--bg);
+            color: var(--text-light);
+        }
+        .list-item .tag.done { background: #3FBA8C; color: #fff; }
+        .list-item .tag.familiar { background: #E8924A; color: #fff; }
+
+        /* ===== 统计格子 ===== */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0 14px;
+        }
+        .stat-box {
+            background: var(--bg);
+            border-radius: var(--radius-sm);
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-box .num { font-size: 24px; font-weight: 700; color: var(--text); }
+        .stat-box .lbl { font-size: 11px; color: var(--text-light); font-weight: 500; }
+
+        /* ===== 进度条 ===== */
+        .progress-bar {
+            height: 7px;
+            background: var(--border);
+            border-radius: 10px;
+            margin: 5px 0 10px;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--primary), #8AB0F7);
+            transition: width 0.5s;
+        }
+
+        /* ===== 词汇高亮 ===== */
+        .vocab-card {
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            border-left: 4px solid var(--primary);
+        }
+        .vocab-card .big { font-size: 22px; font-weight: 700; color: var(--primary-dark); }
+        .vocab-card .small { font-size: 13px; color: var(--text-light); }
+
+        /* ===== 城市网格 ===== */
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 8px 0 12px;
+        }
+        .city-grid .city-btn {
+            padding: 8px 4px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg);
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.15s;
+            color: var(--text);
+        }
+        .city-grid .city-btn:active { transform: scale(0.93); }
+        .city-grid .city-btn.master {
+            border-color: #3FBA8C;
+            background: #E8F5EF;
+            color: #1A6A4A;
+        }
+        .city-grid .city-btn.familiar {
+            border-color: #E8924A;
+            background: #F5EDE6;
+            color: #8A5A2A;
+        }
+
+        /* ===== 娱乐推荐 ===== */
+        .reco-box {
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 14px;
+            border: 1px solid var(--border);
+        }
+        .reco-box .emoji { font-size: 42px; margin-bottom: 4px; }
+        .reco-box .name { font-size: 18px; font-weight: 600; color: var(--text); }
+        .reco-box .desc { font-size: 13px; color: var(--text-light); margin-top: 3px; }
+        .reco-box .tag {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 11px;
+            padding: 2px 14px;
+            border-radius: 30px;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* ===== 通用 ===== */
+        .divider { border: none; border-top: 2px solid var(--bg); margin: 14px 0; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .empty { color: var(--text-light); text-align: center; padding: 24px 0; font-size: 14px; }
+        .toast {
+            position: fixed;
+            bottom: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text);
+            color: #fff;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-size: 13px;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+        .toast.show { opacity: 1; }
+        .book-item {
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--bg);
+        }
+        .book-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        ::-webkit-scrollbar { width: 2px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* 底部安全区 */
+        .safe-bottom { height: 20px; }
+
+        /* ===== 底部固定导航栏(工作台小标)===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 430px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            display: flex;
+            justify-content: space-around;
+            align-items: stretch;
+            padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+            border-top: 1px solid var(--border);
+            box-shadow: 0 -4px 20px rgba(91, 141, 239, 0.08);
+            z-index: 100;
+        }
+        .bottom-nav .nav-item {
+            flex: 1;
+            min-width: 0;
+            border: none;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 4px 2px;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 10px;
+        }
+        .bottom-nav .nav-item .ico {
+            font-size: 20px;
+            line-height: 1;
+            transition: 0.2s;
+        }
+        .bottom-nav .nav-item .txt {
+            font-size: 10px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .bottom-nav .nav-item.active {
+            color: var(--primary);
+        }
+        .bottom-nav .nav-item.active .ico {
+            transform: translateY(-2px) scale(1.1);
+            filter: drop-shadow(0 3px 6px rgba(91, 141, 239, 0.4));
+        }
+        .bottom-nav .nav-item.active .txt {
+            color: var(--primary);
+        }
+        .bottom-nav .nav-item:active { transform: scale(0.9); }
+
+        .mt-2 { margin-top: 8px; }
+        .del-btn {
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+        .del-btn:active { color: #e74c3c; }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部 ===== -->
+    <header class="app-header">
+        <div class="brand">
+            <span class="icon">🌱</span>
+            <h1>欣欣日常<span>· 成长台</span></h1>
+        </div>
+        <div class="streak">🔥 <span id="streakNum">0</span>天</div>
+    </header>
+
+    <!-- ===== 四环 ===== -->
+    <div class="rings-section">
+        <div class="ring-item">
+            <div class="circle c1"><div class="inner" id="ringDiary">0%</div></div>
+            <div class="label">📖 日记</div>
+        </div>
+        <div class="ring-item">
+            <div class="circle c2"><div class="inner" id="ringCet">0%</div></div>
+            <div class="label">📚 四级</div>
+        </div>
+        <div class="ring-item">
+            <div class="circle c3"><div class="inner" id="ringGuide">0%</div></div>
+            <div class="label">🧭 导游证</div>
+        </div>
+        <div class="ring-item">
+            <div class="circle c4"><div class="inner" id="ringSpeech">0%</div></div>
+            <div class="label">🏞️ 导游词</div>
+        </div>
+    </div>
+
+    <!-- ===== Tab栏 ===== -->
+    <div class="tab-bar" id="tabBar">
+        <button class="active" data-page="page0">📊 总览</button>
+        <button data-page="page1">📖 日记</button>
+        <button data-page="page2">📚 四级</button>
+        <button data-page="page3">🧭 导游证</button>
+        <button data-page="page4">🏞️ 导游词</button>
+        <button data-page="page5">🎬 娱乐</button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE 0: 总览 -->
+    <!-- ============================================================ -->
+    <div class="page active" id="page0">
+        <div class="card">
+            <div class="card-title">📊 本月总览 <span class="sub" id="monthLabel"></span></div>
+            <div class="stat-grid">
+                <div class="stat-box"><div class="num" id="totalDays">0</div><div class="lbl">打卡天数</div></div>
+                <div class="stat-box"><div class="num" id="totalRate">0%</div><div class="lbl">综合完成率</div></div>
+            </div>
+            <div id="overviewDetail">
+                <div class="list-item"><span>📖 日记</span><span id="ovDiary">0篇</span></div>
+                <div class="list-item"><span>📚 四级</span><span id="ovCet">词汇0 · 阅读0 · 听力0 · 作文0</span></div>
+                <div class="list-item"><span>🧭 导游证</span><span id="ovGuide">0/4本书</span></div>
+                <div class="list-item"><span>🏞️ 导游词</span><span id="ovSpeech">0/13城市</span></div>
+            </div>
+            <button class="btn btn-secondary btn-small btn-block mt-2" onclick="resetAll()">🔄 重置所有数据</button>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE 1: 日记 -->
+    <!-- ============================================================ -->
+    <div class="page" id="page1">
+        <div class="card">
+            <div class="card-title">📖 今日日记 <span class="sub" id="diaryDate"></span></div>
+            <div class="row"><label>心情</label>
+                <select id="diaryMood"><option value="5">😄 超棒</option><option value="4">🙂 不错</option><option value="3" selected>😐 一般</option><option value="2">😟 低落</option><option value="1">😢 糟糕</option></select>
+            </div>
+            <div class="row"><label>成就</label><input id="diaryAchieve" placeholder="今天做成了什么？"></div>
+            <div class="row"><label>改进</label><input id="diaryImprove" placeholder="哪里可以更好？"></div>
+            <div class="row"><label>明日</label><input id="diaryTomorrow" placeholder="明天最重要的三件事"></div>
+            <button class="btn btn-block" onclick="saveDiary()">💾 保存今日日记</button>
+        </div>
+        <div class="card">
+            <div class="card-title">📜 最近记录</div>
+            <div id="diaryHistory"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE 2: 四级 -->
+    <!-- ============================================================ -->
+    <div class="page" id="page2">
+        <div class="card">
+            <div class="card-title">📚 四级冲刺 <span class="sub" id="cetDate"></span></div>
+            <div class="vocab-card">
+                <div class="flex-between">
+                    <span><span class="big" id="vocabTotalDone">0</span><span class="small"> / 800 词</span></span>
+                    <span class="small" id="vocabRemain">剩余 800 词</span>
+                </div>
+                <div class="progress-bar"><div class="fill" id="vocabProgressFill" style="width:0%;"></div></div>
+                <div class="flex-between small">
+                    <span>📅 每日 40 词</span>
+                    <span id="vocabFinishDate">预计完成：--</span>
+                </div>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-box"><div class="num" id="cetVocab">0</div><div class="lbl">词汇(总)</div></div>
+                <div class="stat-box"><div class="num" id="cetRead">0</div><div class="lbl">阅读(篇)</div></div>
+                <div class="stat-box"><div class="num" id="cetListen">0</div><div class="lbl">听力(分钟)</div></div>
+                <div class="stat-box"><div class="num" id="cetWrite">0</div><div class="lbl">作文(篇)</div></div>
+            </div>
+            <div class="row"><label>今日词汇</label><input type="number" id="cetVocabIn" value="40" min="0"></div>
+            <div class="row"><label>今日阅读</label><input type="number" id="cetReadIn" value="1" min="0"></div>
+            <div class="row"><label>今日听力</label><input type="number" id="cetListenIn" value="15" min="0"></div>
+            <div class="row"><label>今日作文</label><input type="number" id="cetWriteIn" value="0" min="0"></div>
+            <button class="btn btn-block" onclick="saveCet()">✅ 打卡今日四级</button>
+            <div style="margin-top:12px;font-size:13px;color:var(--text-light);" id="cetHistory"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE 3: 导游证 -->
+    <!-- ============================================================ -->
+    <div class="page" id="page3">
+        <div class="card">
+            <div class="card-title">🧭 导游证·四本书 <span class="sub">按题目数量</span></div>
+            <div id="bookList"></div>
+            <hr class="divider">
+            <div class="row">
+                <label>今日刷题</label>
+                <input type="number" id="todayQuestionInput" value="10" min="1" style="flex:0 0 80px;">
+                <button class="btn btn-small btn-success" onclick="addQuestions()">➕ 增加</button>
+            </div>
+            <button class="btn btn-secondary btn-small btn-block" onclick="resetAllBooks()" style="margin-top:6px;">↺ 重置所有题库</button>
+            <hr class="divider">
+            <div style="font-size:13px;color:var(--text-light);" id="guideStats"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE 4: 导游词 -->
+    <!-- ============================================================ -->
+    <div class="page" id="page4">
+        <div class="card">
+            <div class="card-title">🏞️ 十三太保·导游词</div>
+            <div class="city-grid" id="speechGrid"></div>
+            <hr class="divider">
+            <div class="row"><label>景点</label><input id="speechSpot" placeholder="如：中山陵"></div>
+            <div class="row"><label>状态</label>
+                <select id="speechStatus"><option value="0">❌ 未背</option><option value="1">🔶 熟悉中</option><option value="2">✅ 已掌握</option></select>
+            </div>
+            <button class="btn btn-small" onclick="updateSpeech()">更新导游词状态</button>
+            <hr class="divider">
+            <div style="font-size:13px;color:var(--text-light);" id="speechStats"></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE 5: 娱乐 -->
+    <!-- ============================================================ -->
+    <div class="page" id="page5">
+        <div class="card">
+            <div class="card-title">🎬 放松一刻 <span class="sub">暖心 · 幽默 · 练语感</span></div>
+            <div class="reco-box">
+                <div class="emoji" id="recoEmoji">🎲</div>
+                <div class="name" id="recoName">点击随机推荐</div>
+                <div class="desc" id="recoDesc">适合学习间隙放松</div>
+                <div class="tag" id="recoTag">🎯 轻松 · 练语感</div>
+            </div>
+            <button class="btn btn-block" onclick="randomRecommend()">🎲 随机推荐一部</button>
+        </div>
+        <div class="card">
+            <div class="card-title">📋 我的片单</div>
+            <div id="myPlaylist"></div>
+            <div class="row" style="margin-top:8px;"><label>添加</label><input id="playlistInput" placeholder="输入片名"></div>
+            <button class="btn btn-secondary btn-small" onclick="addPlaylist()">➕ 加入片单</button>
+        </div>
+    </div>
+
+    <div class="safe-bottom"></div>
+
+    <!-- ===== 底部固定导航(工作台小标)===== -->
+    <nav class="bottom-nav" id="bottomNav">
+        <button class="nav-item active" data-page="page0">
+            <span class="ico">📊</span><span class="txt">总览</span>
+        </button>
+        <button class="nav-item" data-page="page1">
+            <span class="ico">📖</span><span class="txt">日记</span>
+        </button>
+        <button class="nav-item" data-page="page2">
+            <span class="ico">📚</span><span class="txt">四级</span>
+        </button>
+        <button class="nav-item" data-page="page3">
+            <span class="ico">🧭</span><span class="txt">导游证</span>
+        </button>
+        <button class="nav-item" data-page="page4">
+            <span class="ico">🏞️</span><span class="txt">导游词</span>
+        </button>
+        <button class="nav-item" data-page="page5">
+            <span class="ico">🎬</span><span class="txt">娱乐</span>
+        </button>
+    </nav>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ============================================================
+        //  数据层
+        // ============================================================
+        const STORAGE_KEY = 'xinxin_daily_data';
+        const TOTAL_VOCAB = 800;
+        const DAILY_VOCAB = 40;
+
+        function getDefaultData() {
+            return {
+                diary: [],
+                cet: [],
+                books: [
+                    { name: '政策与法律法规', total: 260, done: 0 },
+                    { name: '导游业务', total: 205, done: 0 },
+                    { name: '全国导游基础知识', total: 410, done: 0 },
+                    { name: '地方导游基础知识', total: 151, done: 0 }
+                ],
+                speeches: {},
+                playlist: [],
+                streak: 0
+            };
+        }
+
+        function loadData() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return getDefaultData();
+                const d = JSON.parse(raw);
+                const def = getDefaultData();
+                for (let k in def) { if (!(k in d)) d[k] = def[k]; }
+                const cities = ['南京', '苏州', '无锡', '常州', '镇江', '扬州', '泰州', '南通', '盐城', '淮安', '连云港', '徐州', '宿迁'];
+                if (!d.speeches || typeof d.speeches !== 'object') d.speeches = {};
+                let needSave = false;
+                cities.forEach(c => {
+                    if (!d.speeches[c]) {
+                        d.speeches[c] = { spots: [{ name: c + '代表性景点', status: 0 }] };
+                        needSave = true;
+                    }
+                });
+                if (needSave) saveData(d);
+                return d;
+            } catch (e) {
+                return getDefaultData();
+            }
+        }
+
+        function saveData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        let appData = loadData();
+
+        function getToday() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
+        function getMonthLabel() {
+            const d = new Date();
+            return d.getFullYear() + '年' + (d.getMonth() + 1) + '月';
+        }
+
+        let toastTimer = null;
+
+        function showToast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.remove('show'), 1600);
+        }
+
+        // ============================================================
+        //  词汇计算
+        // ============================================================
+        function getTotalVocab() {
+            let total = 0;
+            appData.cet.forEach(c => { total += c.vocab || 0; });
+            return Math.min(total, TOTAL_VOCAB);
+        }
+
+        function getVocabFinishDate() {
+            const done = getTotalVocab();
+            const remain = Math.max(0, TOTAL_VOCAB - done);
+            if (remain <= 0) return '🎉 已完成！';
+            const daysNeeded = Math.ceil(remain / DAILY_VOCAB);
+            const d = new Date();
+            d.setDate(d.getDate() + daysNeeded);
+            return '预计 ' + d.toISOString().slice(0, 10);
+        }
+
+        // ============================================================
+        //  渲染：环 & 总览
+        // ============================================================
+        function calcRings() {
+            const today = getToday();
+            const daysInMonth = new Date().getDate();
+            const diaryDays = appData.diary.filter(d => d.date.startsWith(today.slice(0, 7))).length;
+            const diaryRate = Math.min(100, Math.round((diaryDays / Math.max(1, daysInMonth)) * 100));
+
+            const cetDays = appData.cet.filter(d => d.date.startsWith(today.slice(0, 7))).length;
+            const cetRate = Math.min(100, Math.round((cetDays / Math.max(1, daysInMonth)) * 100));
+
+            let totalQ = 0,
+                doneQ = 0;
+            appData.books.forEach(b => { totalQ += b.total;
+                doneQ += b.done; });
+            const guideRate = totalQ > 0 ? Math.min(100, Math.round((doneQ / totalQ) * 100)) : 0;
+
+            let speechTotal = 0,
+                speechDone = 0;
+            const cities = Object.keys(appData.speeches);
+            cities.forEach(c => {
+                const spots = appData.speeches[c].spots || [];
+                spots.forEach(s => {
+                    speechTotal++;
+                    if (s.status >= 1) speechDone++;
+                });
+            });
+            const speechRate = speechTotal > 0 ? Math.min(100, Math.round((speechDone / speechTotal) * 100)) : 0;
+
+            document.getElementById('ringDiary').textContent = diaryRate + '%';
+            document.getElementById('ringCet').textContent = cetRate + '%';
+            document.getElementById('ringGuide').textContent = guideRate + '%';
+            document.getElementById('ringSpeech').textContent = speechRate + '%';
+
+            document.querySelector('.c1').style.background =
+                `conic-gradient(#5B8DEF 0% ${diaryRate}%, #E6EDF6 ${diaryRate}% 100%)`;
+            document.querySelector('.c2').style.background =
+                `conic-gradient(#6B9CF5 0% ${cetRate}%, #E6EDF6 ${cetRate}% 100%)`;
+            document.querySelector('.c3').style.background =
+                `conic-gradient(#8AB0F7 0% ${guideRate}%, #E6EDF6 ${guideRate}% 100%)`;
+            document.querySelector('.c4').style.background =
+                `conic-gradient(#4A7ED9 0% ${speechRate}%, #E6EDF6 ${speechRate}% 100%)`;
+
+            document.getElementById('streakNum').textContent = appData.streak;
+
+            document.getElementById('monthLabel').textContent = getMonthLabel();
+            const totalDays = new Set([...appData.diary.map(d => d.date), ...appData.cet.map(d => d.date)]).size;
+            document.getElementById('totalDays').textContent = totalDays;
+            const avg = Math.round((diaryRate + cetRate + guideRate + speechRate) / 4);
+            document.getElementById('totalRate').textContent = avg + '%';
+
+            document.getElementById('ovDiary').textContent = diaryDays + '篇';
+            let totalV = 0,
+                totalR = 0,
+                totalL = 0,
+                totalW = 0;
+            appData.cet.forEach(c => { totalV += c.vocab || 0;
+                totalR += c.read || 0;
+                totalL += c.listen || 0;
+                totalW += c.write || 0; });
+            document.getElementById('ovCet').textContent = `词汇${totalV} · 阅读${totalR} · 听力${totalL} · 作文${totalW}`;
+            let doneBooks = appData.books.filter(b => b.done >= b.total).length;
+            document.getElementById('ovGuide').textContent = doneBooks + '/' + appData.books.length + '本书';
+            let masteredCities = Object.keys(appData.speeches).filter(c => {
+                const spots = appData.speeches[c].spots || [];
+                return spots.every(s => s.status === 2);
+            }).length;
+            document.getElementById('ovSpeech').textContent = masteredCities + '/' + Object.keys(appData.speeches).length +
+                '城市';
+        }
+
+        function renderVocabProgress() {
+            const done = getTotalVocab();
+            const remain = Math.max(0, TOTAL_VOCAB - done);
+            const pct = Math.min(100, Math.round((done / TOTAL_VOCAB) * 100));
+            document.getElementById('vocabTotalDone').textContent = done;
+            document.getElementById('vocabRemain').textContent = '剩余 ' + remain + ' 词';
+            document.getElementById('vocabProgressFill').style.width = pct + '%';
+            document.getElementById('vocabFinishDate').textContent = '📅 ' + getVocabFinishDate();
+        }
+
+        // ============================================================
+        //  Tab切换(顶部Tab + 底部导航 联动)
+        // ============================================================
+        function switchPage(pageId, scrollToTop) {
+            // 同步顶部 Tab
+            document.querySelectorAll('.tab-bar button').forEach(b => b.classList.remove('active'));
+            const topBtn = document.querySelector(`.tab-bar button[data-page="${pageId}"]`);
+            if (topBtn) topBtn.classList.add('active');
+            // 同步底部导航
+            document.querySelectorAll('.bottom-nav .nav-item').forEach(b => b.classList.remove('active'));
+            const navBtn = document.querySelector(`.bottom-nav .nav-item[data-page="${pageId}"]`);
+            if (navBtn) navBtn.classList.add('active');
+            // 切换页面
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            // 刷新对应页数据
+            if (pageId === 'page0') calcRings();
+            if (pageId === 'page1') renderDiary();
+            if (pageId === 'page2') renderCet();
+            if (pageId === 'page3') renderBooks();
+            if (pageId === 'page4') renderSpeech();
+            if (pageId === 'page5') renderPlaylist();
+            if (scrollToTop !== false) window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 顶部 Tab 点击
+        document.getElementById('tabBar').addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            switchPage(btn.dataset.page);
+        });
+        // 底部导航点击
+        document.getElementById('bottomNav').addEventListener('click', (e) => {
+            const btn = e.target.closest('.nav-item');
+            if (!btn) return;
+            switchPage(btn.dataset.page);
+        });
+
+        // ============================================================
+        //  日记
+        // ============================================================
+        function renderDiary() {
+            document.getElementById('diaryDate').textContent = getToday();
+            const existing = appData.diary.find(d => d.date === getToday());
+            if (existing) {
+                document.getElementById('diaryMood').value = existing.mood || 3;
+                document.getElementById('diaryAchieve').value = existing.achieve || '';
+                document.getElementById('diaryImprove').value = existing.improve || '';
+                document.getElementById('diaryTomorrow').value = existing.tomorrow || '';
+            }
+            const hist = document.getElementById('diaryHistory');
+            if (appData.diary.length === 0) {
+                hist.innerHTML = '<div class="empty">还没有记录，今天写下第一篇吧 ✨</div>';
+                return;
+            }
+            const moodMap = { 5: '😄', 4: '🙂', 3: '😐', 2: '😟', 1: '😢' };
+            hist.innerHTML = appData.diary.slice().reverse().map(d => `
+                <div class="book-item">
+                    <div class="flex-between">
+                        <strong>${d.date}</strong>
+                        <span style="font-size:18px;">${moodMap[d.mood] || '😐'}</span>
+                    </div>
+                    ${d.achieve ? `<div style="margin-top:6px;font-size:13px;">✅ ${escapeHtml(d.achieve)}</div>` : ''}
+                    ${d.improve ? `<div style="margin-top:3px;font-size:13px;color:var(--text-light);">💡 ${escapeHtml(d.improve)}</div>` : ''}
+                    ${d.tomorrow ? `<div style="margin-top:3px;font-size:13px;color:var(--primary);">📌 ${escapeHtml(d.tomorrow)}</div>` : ''}
+                    <button class="del-btn" style="margin-top:4px;" onclick="deleteDiary('${d.date}')">🗑 删除</button>
+                </div>
+            `).join('');
+        }
+
+        function saveDiary() {
+            const today = getToday();
+            const entry = {
+                date: today,
+                mood: parseInt(document.getElementById('diaryMood').value) || 3,
+                achieve: document.getElementById('diaryAchieve').value.trim(),
+                improve: document.getElementById('diaryImprove').value.trim(),
+                tomorrow: document.getElementById('diaryTomorrow').value.trim()
+            };
+            const idx = appData.diary.findIndex(d => d.date === today);
+            if (idx >= 0) {
+                appData.diary[idx] = entry;
+                showToast('日记已更新 📖');
+            } else {
+                appData.diary.push(entry);
+                showToast('日记已保存 ✨');
+            }
+            updateStreak();
+            saveData(appData);
+            calcRings();
+            renderDiary();
+        }
+
+        function deleteDiary(date) {
+            appData.diary = appData.diary.filter(d => d.date !== date);
+            saveData(appData);
+            calcRings();
+            renderDiary();
+            showToast('已删除 🗑');
+        }
+
+        // ============================================================
+        //  四级
+        // ============================================================
+        function renderCet() {
+            document.getElementById('cetDate').textContent = getToday();
+            renderVocabProgress();
+            const today = getToday();
+            const existing = appData.cet.find(c => c.date === today);
+            if (existing) {
+                document.getElementById('cetVocabIn').value = existing.vocab ?? 40;
+                document.getElementById('cetReadIn').value = existing.read ?? 1;
+                document.getElementById('cetListenIn').value = existing.listen ?? 15;
+                document.getElementById('cetWriteIn').value = existing.write ?? 0;
+            }
+            // 统计总量
+            let totalV = 0, totalR = 0, totalL = 0, totalW = 0;
+            appData.cet.forEach(c => {
+                totalV += c.vocab || 0;
+                totalR += c.read || 0;
+                totalL += c.listen || 0;
+                totalW += c.write || 0;
+            });
+            document.getElementById('cetVocab').textContent = totalV;
+            document.getElementById('cetRead').textContent = totalR;
+            document.getElementById('cetListen').textContent = totalL;
+            document.getElementById('cetWrite').textContent = totalW;
+            // 历史
+            const hist = document.getElementById('cetHistory');
+            if (appData.cet.length === 0) {
+                hist.innerHTML = '还没有打卡记录，今天开始第一打卡吧 🚀';
+            } else {
+                hist.innerHTML = '📅 最近打卡：<br>' + appData.cet.slice().reverse().slice(0, 7).map(c =>
+                    `${c.date} · 词${c.vocab||0} · 读${c.read||0} · 听${c.listen||0} · 写${c.write||0}`
+                ).join('<br>');
+            }
+        }
+
+        function saveCet() {
+            const today = getToday();
+            const entry = {
+                date: today,
+                vocab: Math.max(0, parseInt(document.getElementById('cetVocabIn').value) || 0),
+                read: Math.max(0, parseInt(document.getElementById('cetReadIn').value) || 0),
+                listen: Math.max(0, parseInt(document.getElementById('cetListenIn').value) || 0),
+                write: Math.max(0, parseInt(document.getElementById('cetWriteIn').value) || 0)
+            };
+            const idx = appData.cet.findIndex(c => c.date === today);
+            if (idx >= 0) {
+                appData.cet[idx] = entry;
+                showToast('四级打卡已更新 ✅');
+            } else {
+                appData.cet.push(entry);
+                showToast('四级打卡成功 🎯');
+            }
+            updateStreak();
+            saveData(appData);
+            calcRings();
+            renderCet();
+        }
+
+        // ============================================================
+        //  导游证·书
+        // ============================================================
+        function renderBooks() {
+            const list = document.getElementById('bookList');
+            list.innerHTML = appData.books.map((b, i) => {
+                const pct = b.total > 0 ? Math.min(100, Math.round((b.done / b.total) * 100)) : 0;
+                const isDone = b.done >= b.total;
+                return `
+                    <div class="book-item">
+                        <div class="flex-between">
+                            <strong>${escapeHtml(b.name)}</strong>
+                            <span style="font-size:12px;color:var(--text-light);">${b.done}/${b.total}</span>
+                        </div>
+                        <div class="progress-bar" style="margin-top:6px;"><div class="fill" style="width:${pct}%;"></div></div>
+                        <div class="flex-between" style="margin-top:4px;">
+                            <span style="font-size:12px;color:var(--text-light);">${pct}%${isDone ? ' ✅' : ''}</span>
+                            <button class="btn btn-small btn-secondary" onclick="adjustBook(${i}, -5)">-5</button>
+                            <button class="btn btn-small btn-secondary" onclick="adjustBook(${i}, 5)">+5</button>
+                            <button class="btn btn-small btn-orange" onclick="resetBook(${i})">重置</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            // 统计
+            let totalQ = 0, doneQ = 0;
+            appData.books.forEach(b => { totalQ += b.total; doneQ += b.done; });
+            const overallPct = totalQ > 0 ? Math.round((doneQ / totalQ) * 100) : 0;
+            const doneBooks = appData.books.filter(b => b.done >= b.total).length;
+            document.getElementById('guideStats').innerHTML =
+                `📊 总进度：${doneQ}/${totalQ} 题 (${overallPct}%)<br>📚 已完成：${doneBooks}/${appData.books.length} 本`;
+        }
+
+        function addQuestions() {
+            const n = Math.max(1, parseInt(document.getElementById('todayQuestionInput').value) || 0);
+            // 平均分配到未完成的书
+            const unfinished = appData.books.filter(b => b.done < b.total);
+            if (unfinished.length === 0) {
+                showToast('所有书都已完成 🎉');
+                return;
+            }
+            // 轮流加，直到加完 n 题
+            let added = 0;
+            while (added < n) {
+                for (let b of unfinished) {
+                    if (added >= n) break;
+                    if (b.done < b.total) {
+                        b.done++;
+                        added++;
+                    }
+                }
+            }
+            saveData(appData);
+            calcRings();
+            renderBooks();
+            showToast(`增加 ${n} 题 ✅`);
+        }
+
+        function adjustBook(idx, delta) {
+            const b = appData.books[idx];
+            b.done = Math.max(0, Math.min(b.total, b.done + delta));
+            saveData(appData);
+            calcRings();
+            renderBooks();
+        }
+
+        function resetBook(idx) {
+            if (!confirm('确定重置这本书的进度？')) return;
+            appData.books[idx].done = 0;
+            saveData(appData);
+            calcRings();
+            renderBooks();
+            showToast('已重置 ↺');
+        }
+
+        function resetAllBooks() {
+            if (!confirm('确定重置所有题库进度？')) return;
+            appData.books.forEach(b => b.done = 0);
+            saveData(appData);
+            calcRings();
+            renderBooks();
+            showToast('所有题库已重置 ↺');
+        }
+
+        // ============================================================
+        //  导游词·城市
+        // ============================================================
+        function renderSpeech() {
+            const grid = document.getElementById('speechGrid');
+            const cities = Object.keys(appData.speeches).sort();
+            grid.innerHTML = cities.map(c => {
+                const spots = appData.speeches[c].spots || [];
+                const allMaster = spots.length > 0 && spots.every(s => s.status === 2);
+                const anyFamiliar = spots.some(s => s.status === 1) && !allMaster;
+                let cls = '';
+                if (allMaster) cls = 'master';
+                else if (anyFamiliar) cls = 'familiar';
+                return `<div class="city-btn ${cls}" onclick="expandCity('${c}')">${c}</div>`;
+            }).join('');
+            // 统计
+            let total = 0, done = 0, mastered = 0;
+            cities.forEach(c => {
+                const spots = appData.speeches[c].spots || [];
+                total += spots.length;
+                done += spots.filter(s => s.status >= 1).length;
+                if (spots.length > 0 && spots.every(s => s.status === 2)) mastered++;
+            });
+            document.getElementById('speechStats').innerHTML =
+                `📍 景点：${done}/${total} 已背 (${total > 0 ? Math.round((done/total)*100) : 0}%)<br>🏙 城市：${mastered}/${cities.length} 已全部掌握`;
+        }
+
+        let expandedCity = null;
+
+        function expandCity(city) {
+            const grid = document.getElementById('speechGrid');
+            if (expandedCity === city) {
+                // 收起
+                expandedCity = null;
+                renderSpeech();
+                return;
+            }
+            expandedCity = city;
+            const spots = appData.speeches[city].spots || [];
+            const statusMap = { 0: '❌ 未背', 1: '🔶 熟悉中', 2: '✅ 已掌握' };
+            const cities = Object.keys(appData.speeches).sort();
+            grid.innerHTML = cities.map(c => {
+                if (c === city) {
+                    const spotsHtml = spots.map((s, i) => `
+                        <div class="list-item">
+                            <span class="name">${escapeHtml(s.name)}</span>
+                            <span>
+                                <span class="tag ${s.status === 2 ? 'done' : (s.status === 1 ? 'familiar' : '')}" style="cursor:pointer;" onclick="cycleSpotStatus('${city}', ${i})">${statusMap[s.status]}</span>
+                                <button class="del-btn" onclick="deleteSpot('${city}', ${i})">🗑</button>
+                            </span>
+                        </div>
+                    `).join('');
+                    return `<div class="city-btn master" style="grid-column:1/-1;text-align:left;padding:10px;">
+                        <strong>📍 ${city}</strong>
+                        <div style="margin-top:8px;">${spotsHtml || '<div class="empty">暂无景点</div>'}</div>
+                    </div>`;
+                }
+                const allMaster = spots.length > 0 && spots.every(s => s.status === 2);
+                const anyFamiliar = spots.some(s => s.status === 1) && !allMaster;
+                let cls = '';
+                if (allMaster) cls = 'master';
+                else if (anyFamiliar) cls = 'familiar';
+                return `<div class="city-btn ${cls}" onclick="expandCity('${c}')">${c}</div>`;
+            }).join('');
+        }
+
+        function cycleSpotStatus(city, idx) {
+            const spot = appData.speeches[city].spots[idx];
+            spot.status = (spot.status + 1) % 3;
+            saveData(appData);
+            calcRings();
+            expandCity(city);
+            renderSpeech();
+            expandedCity = city;
+            expandCity(city);
+        }
+
+        function updateSpeech() {
+            const spotName = document.getElementById('speechSpot').value.trim();
+            const status = parseInt(document.getElementById('speechStatus').value);
+            if (!spotName) {
+                showToast('请输入景点名称');
+                return;
+            }
+            // 在所有城市中查找该景点，找不到则加到第一个城市
+            let found = false;
+            for (let c in appData.speeches) {
+                const spots = appData.speeches[c].spots || [];
+                const idx = spots.findIndex(s => s.name === spotName);
+                if (idx >= 0) {
+                    spots[idx].status = status;
+                    found = true;
+                    showToast(`${c} · ${spotName} 已更新`);
+                    break;
+                }
+            }
+            if (!found) {
+                // 加到展开中的城市，否则加到第一个城市
+                const targetCity = expandedCity || Object.keys(appData.speeches)[0];
+                appData.speeches[targetCity].spots.push({ name: spotName, status: status });
+                showToast(`${targetCity} · ${spotName} 已添加`);
+            }
+            saveData(appData);
+            calcRings();
+            renderSpeech();
+            document.getElementById('speechSpot').value = '';
+        }
+
+        function deleteSpot(city, idx) {
+            appData.speeches[city].spots.splice(idx, 1);
+            saveData(appData);
+            calcRings();
+            expandedCity = city;
+            expandCity(city);
+            showToast('已删除 🗑');
+        }
+
+        // ============================================================
+        //  娱乐推荐
+        // ============================================================
+        const RECO_LIST = [
+            { emoji: '🎬', name: '怦然心动', desc: '纯真暖心的初恋故事，英语简单好听', tag: '🎯 轻松 · 练语感' },
+            { emoji: '🎬', name: '阿甘正传', desc: '跟着阿甘学最地道的口语表达', tag: '🎯 经典 · 练语感' },
+            { emoji: '🎬', name: '寻梦环游记', desc: '关于梦想与家人的温暖动画', tag: '🎯 治愈 · 放松' },
+            { emoji: '📺', name: '老友记', desc: '美式幽默入门必看，笑到停不下来', tag: '🎯 幽默 · 练语感' },
+            { emoji: '📺', name: '摩登家庭', desc: '伪纪录片式家庭喜剧，口语地道', tag: '🎯 幽默 · 放松' },
+            { emoji: '🎵', name: '周杰伦《范特西》', desc: '复习时来一首，瞬间回血', tag: '🎯 专注 · 提神' },
+            { emoji: '📖', name: '小王子', desc: '中英双语，15分钟读完，治愈满分', tag: '🎯 治愈 · 练语感' },
+            { emoji: '🎬', name: '海上钢琴师', desc: '关于选择与坚持，配乐绝美', tag: '🎯 沉浸 · 放松' },
+            { emoji: '📺', name: '生活大爆炸', desc: '学霸的日常，笑着学英语', tag: '🎯 幽默 · 练语感' },
+            { emoji: '🎬', name: '摔跤吧！爸爸', desc: '燃到爆的励志片，看完想刷题', tag: '🎯 燃 · 励志' },
+            { emoji: '📺', name: '切尔诺贝利', desc: '紧张到窒息的迷你剧，练听力', tag: '🎯 紧凑 · 练听力' },
+            { emoji: '🎵', name: 'Taylor Swift《1989》', desc: '边走边听，英语语感自然来', tag: '🎯 轻松 · 练语感' }
+        ];
+
+        function randomRecommend() {
+            const pick = RECO_LIST[Math.floor(Math.random() * RECO_LIST.length)];
+            document.getElementById('recoEmoji').textContent = pick.emoji;
+            document.getElementById('recoName').textContent = pick.name;
+            document.getElementById('recoDesc').textContent = pick.desc;
+            document.getElementById('recoTag').textContent = pick.tag;
+        }
+
+        // ============================================================
+        //  片单
+        // ============================================================
+        function renderPlaylist() {
+            const el = document.getElementById('myPlaylist');
+            if (appData.playlist.length === 0) {
+                el.innerHTML = '<div class="empty">片单空空，加点想看的吧 🎬</div>';
+                return;
+            }
+            el.innerHTML = appData.playlist.map((p, i) => `
+                <div class="list-item">
+                    <span class="name">${escapeHtml(p)}</span>
+                    <button class="del-btn" onclick="removePlaylist(${i})">🗑</button>
+                </div>
+            `).join('');
+        }
+
+        function addPlaylist() {
+            const v = document.getElementById('playlistInput').value.trim();
+            if (!v) return;
+            appData.playlist.push(v);
+            saveData(appData);
+            document.getElementById('playlistInput').value = '';
+            renderPlaylist();
+            showToast('已加入片单 ✅');
+        }
+
+        function removePlaylist(idx) {
+            appData.playlist.splice(idx, 1);
+            saveData(appData);
+            renderPlaylist();
+            showToast('已移除 🗑');
+        }
+
+        // ============================================================
+        //  连续打卡天数
+        // ============================================================
+        function updateStreak() {
+            const dates = new Set([
+                ...appData.diary.map(d => d.date),
+                ...appData.cet.map(d => d.date)
+            ]);
+            if (dates.size === 0) {
+                appData.streak = 0;
+                return;
+            }
+            const sorted = Array.from(dates).sort().reverse();
+            const today = getToday();
+            let streak = 0;
+            let cursor = new Date(today);
+            // 如果今天没打卡，从昨天开始算
+            if (!dates.has(today)) {
+                cursor.setDate(cursor.getDate() - 1);
+            }
+            while (dates.has(cursor.toISOString().slice(0, 10))) {
+                streak++;
+                cursor.setDate(cursor.getDate() - 1);
+            }
+            appData.streak = streak;
+        }
+
+        // ============================================================
+        //  重置
+        // ============================================================
+        function resetAll() {
+            if (!confirm('⚠️ 确定重置所有数据？此操作不可恢复！')) return;
+            if (!confirm('再次确认：真的要清空全部记录吗？')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            appData = getDefaultData();
+            // 重新初始化城市
+            const cities = ['南京', '苏州', '无锡', '常州', '镇江', '扬州', '泰州', '南通', '盐城', '淮安', '连云港', '徐州', '宿迁'];
+            cities.forEach(c => {
+                appData.speeches[c] = { spots: [{ name: c + '代表性景点', status: 0 }] };
+            });
+            saveData(appData);
+            calcRings();
+            renderDiary();
+            renderCet();
+            renderBooks();
+            renderSpeech();
+            renderPlaylist();
+            showToast('已重置所有数据 ↺');
+        }
+
+        // ============================================================
+        //  HTML 转义
+        // ============================================================
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ============================================================
+        //  初始化
+        // ============================================================
+        function init() {
+            updateStreak();
+            saveData(appData);
+            calcRings();
+            renderDiary();
+            renderCet();
+            renderBooks();
+            renderSpeech();
+            renderPlaylist();
+            // 默认随机一条推荐
+            randomRecommend();
+        }
+
+        init();
+    </script>
+</body>
+</html>
